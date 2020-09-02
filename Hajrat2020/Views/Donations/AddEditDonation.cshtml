@@ -1,0 +1,196 @@
+﻿@model Hajrat2020.ViewModel.DonationViewModel
+@{
+    /**/
+
+    ViewBag.Title = "AddDonation";
+}
+<style>
+    #imagePreview {
+        border-radius: 5px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+        #imagePreview:hover {
+            opacity: 0.7;
+        }
+
+    /* The Modal (background) */
+    .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        padding-top: 100px; /* Location of the box */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+    }
+
+    /* Modal Content (Image) */
+    .modal-content {
+        margin: auto;
+        display: block;
+        width: 80%;
+        max-width: 700px;
+    }
+
+    /* Caption of Modal Image (Image Text) - Same Width as the Image */
+    #caption {
+        margin: auto;
+        display: block;
+        width: 80%;
+        max-width: 700px;
+        text-align: center;
+        color: #ccc;
+        padding: 10px 0;
+        height: 150px;
+    }
+
+    /* Add Animation - Zoom in the Modal */
+    .modal-content, #caption {
+        animation-name: zoom;
+        animation-duration: 0.6s;
+    }
+
+    @@keyframes zoom {
+        from {
+            transform: scale(0)
+        }
+
+        to {
+            transform: scale(1)
+        }
+    }
+
+    /* The Close Button */
+    .close {
+        position: absolute;
+        top: 50px;
+        right: 35px;
+        color: #f1f1f1;
+        font-size: 40px;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+
+        .close:hover,
+        .close:focus {
+            color: #bbb;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+    /* 100% Image Width on Smaller Screens */
+    @@media only screen and (max-width: 700px) {
+        .modal-content {
+            width: 100%;
+        }
+    }
+
+    h1 {
+        text-align: center;
+    }
+</style>
+@if (Model.Id > 0)
+{
+    <h1>Uredi donaciju</h1>
+}
+else
+{
+    <h1>Dodaj novu donaciju</h1>
+}
+@if (Model != null)
+{
+    using (Html.BeginForm("Save", "Donations", FormMethod.Post, new
+    {
+        @class = "form-horizontal",
+        autocomplete = "off",
+        role = "form",
+        enctype = "multipart/form-data",
+        id = "frm"
+    }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(model => model.Image)
+        @Html.HiddenFor(model => model.ApplicationUserId)
+        <hr />
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Donator, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(m => m.Donator, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Donator, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Note, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-9">
+                        @Html.TextAreaFor(model => model.Note, new { @cols = "10", @rows = "10", @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.TypeOfHelpId, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-9">
+                        @Html.DropDownListFor(model => model.TypeOfHelpId, new SelectList(Model.TypesOfHelp, "Id", "Name"), "-Izaberi tip pomoći-", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.TypeOfHelpId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group" style="display:none" name="moneyDiv">
+                    @Html.LabelFor(model => model.AmountOfMoney, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.AmountOfMoney, new { @class = "form-control", style = "width:100px;display:inline;" })
+                        @Html.DropDownListFor(model => model.CurrencyId, new SelectList(Model.Currencies, "Id", "Name"), new { @class = "form-control", style = "width:70px;display:inline;" })
+                        <br />
+                        @Html.ValidationMessageFor(m => m.AmountOfMoney, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.FamilyInNeedId, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-9">
+                        @Html.DropDownListFor(model => model.FamilyInNeedId, new SelectList(Model.FamiliesInNeed, "Id", "FullName"), "-Izaberi porodicu-", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.FamilyInNeedId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.DateOfDonation, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(m => m.DateOfDonation, new { @class = "form-control", @readonly = true })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Image, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        <img src="@Url.Content(Model.Image)" style="margin:10px" height="300" width="300" id="imagePreview" />
+                        <input type="file" name="ImageUpload" accept="image/jpeg, image/png"
+                               onchange="ShowImagePreview(this,document.getElementById('imagePreview'))" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" class="btn btn-success" value="Snimi" />
+                </div>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <h3>Donacija nije dostupna</h3>
+}
+<div id="myModal" class="modal">
+    <span class="close">&times;</span>
+    <img class="modal-content" id="img01">
+    <div id="caption"></div>
+</div>
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+}

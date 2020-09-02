@@ -1,0 +1,201 @@
+﻿@model Hajrat2020.ViewModel.UserViewModel
+@{
+}
+<style>
+    td, th {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    tbody tr {
+        cursor: pointer;
+    }
+
+    .center {
+        margin-right: auto;
+        margin-left: auto;
+        width: 800px;
+    }
+</style>
+@if (String.IsNullOrWhiteSpace(Model.Id))
+{
+    <h1 style="text-align:center">Dodaj novog korisnika</h1>
+}
+else
+{
+    <h1 style="text-align:center">Uredi korisnika</h1>
+}
+<div>
+    @using (Html.BeginForm("Save", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form",
+        autocomplete = "off" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(x => x.Id)
+        @Html.HiddenFor(x => x.LoggedInUser)
+        @Html.HiddenFor(x => x.IsRoleAdmin)
+        @Html.HiddenFor(x => x.IsRoleSuperAdmin)
+        @Html.HiddenFor(x => x.ReceivedMoneySumKM)
+        @Html.HiddenFor(x => x.ReceivedMoneySumDolar)
+        @Html.HiddenFor(x => x.ReceivedMoneySumEuro)
+        <hr />
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(m => m.FirstName, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.LastName, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.LastName, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.LastName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Phone, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.Phone, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Phone, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.CityId, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.CityId, new SelectList(Model.Cities, "Id", "Name"), "-Izaberi grad-", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.CityId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.GenderId, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.GenderId, new SelectList(Model.Genders, "Id", "Name"), "-Izaberi spol-", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.GenderId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @if (Model.Id == null)
+                        {
+                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @readonly = "readonly" })
+                        }
+                        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                @if (Model.IsRoleAdmin)
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.IsChosenRoleAdmin, new { @class = "col-md-2 control-label" })
+                        <div class="col-md-10">
+                            @Html.CheckBoxFor(m => m.IsChosenRoleAdmin, new { @class = "form-control" })
+                        </div>
+                    </div>
+                }
+                @if (String.IsNullOrWhiteSpace(Model.Id))
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.PasswordHash, new { @class = "col-md-2 control-label" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(m => m.PasswordHash, new { @class = "form-control", @readonly = true })
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    @Html.HiddenFor(x => x.PasswordHash)
+                }
+            </div>
+            <div class="col-md-6">
+                @if (Model.IsRoleAdmin && Model.Id == Model.LoggedInUser && !String.IsNullOrWhiteSpace(Model.Id))
+                {
+                    <div class="form-group">
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <th>@Html.DisplayNameFor(m => m.ReceivedMoneySumKM)</th>
+                                    <td>@Html.DisplayFor(m => m.ReceivedMoneySumKM)</td>
+                                    <td><b>KM</b></td>
+                                </tr>
+                                <tr>
+                                    <th></th>
+                                    <td>@Html.DisplayFor(m => m.ReceivedMoneySumDolar)</td>
+                                    <td><b>$</b></td>
+                                </tr>
+                                <tr>
+                                    <th></th>
+                                    <td>@Html.DisplayFor(m => m.ReceivedMoneySumEuro)</td>
+                                    <td><b>€</b></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                @if ((Model.LoggedInUser == Model.Id || Model.IsRoleSuperAdmin) && !String.IsNullOrWhiteSpace(Model.Id))
+                {
+                    <button class="btn btn-success" id="changePassword" type="button" style="margin-bottom:15px">Promijeni šifru</button><br />
+                    @Html.ValidationMessageFor(m => m.NewPassword, "", new { @class = "text-danger" })<br />
+                    <div id="showPasswordSection" style="display:none" name="showPasswordSection">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.NewPassword, new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @Html.PasswordFor(m => m.NewPassword, new { @class = "form-control", autocomplete = "off", id = "changePasswordInput" })
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" class="btn btn-success" value="Snimi" />
+            </div>
+        </div>
+    }
+    <hr />
+    @if (Model.FamilyUsers != null && Model.FamilyUsers.Count() != 0 && Model.Id == Model.LoggedInUser)
+    {
+        <div style="margin-top:30px">
+            <div class="table-responsive">
+                <table class="table table-hover" id="donationUserTable">
+                    <thead>
+                        <tr>
+                            <th scope="col">Donacija za</th>
+                            <th scope="col">Adresa</th>
+                            <th scope="col">Telefon</th>
+                            <th scope="col">Broj članova</th>
+                            <th scope="col">Telefon kontakt osobe</th>
+                            <th scope="col" class="hideRow"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var donationuser in Model.FamilyUsers)
+                        {
+                            <tr>
+                                <td scope="row">@donationuser.FamilyInNeed.FullName</td>
+                                <td scope="row">@donationuser.FamilyInNeed.Address</td>
+                                <td scope="row">@donationuser.FamilyInNeed.Phone</td>
+                                <td scope="row">@donationuser.FamilyInNeed.NumberOfFamilyMembers</td>
+                                <td scope="row">@donationuser.FamilyInNeed.ContactPersonPhone</td>
+                                <td class="hideRow">
+                                    <a class="btn btn-danger btn-sm" href='@Url.Action("RemoveFamilyToPrint","FamilyInNeed",new { id=donationuser.FamilyInNeedId })'><i class="fa fa-trash-o fa-lg"></i></a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <button class="btn" id="downloadDonationUserTable">Download tabelu <i class="fa fa-file-pdf-o" aria-hidden="true"></i></button>
+            <a class="btn btn-danger btn-sm" style="float:right;" href='@Url.Action("RemoveAllFamilyToPrint","FamilyInNeed")'>Obriši sve</a>
+        </div>
+    }
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

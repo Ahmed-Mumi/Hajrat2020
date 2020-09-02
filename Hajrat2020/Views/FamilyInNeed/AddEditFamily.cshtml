@@ -1,0 +1,111 @@
+﻿@model Hajrat2020.ViewModel.FamilyViewModel
+@{
+    ViewBag.Title = "AddEditFamily";
+}
+@if (Model.Id > 0)
+{
+    <h1 style="text-align:center">Uredi porodicu</h1>
+}
+else
+{
+    <h1 style="text-align:center">Dodaj novu porodicu</h1>
+}
+
+@using (Html.BeginForm("Save", "FamilyInNeed", FormMethod.Post, new { @class = "form-horizontal", role = "form", autocomplete = "off" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.ApplicationUserId)
+    <hr />
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(m => m.FirstName, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.LastName, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.TextBoxFor(m => m.LastName, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.LastName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Address, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.TextBoxFor(m => m.Address, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Address, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Phone, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.TextBoxFor(m => m.Phone, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Phone, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.ContactPersonName, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.TextBoxFor(m => m.ContactPersonName, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.ContactPersonName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                <div>
+                    @Html.LabelFor(m => m.ContactPersonPhone, new { @class = "col-md-3 control-label" })
+                </div>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(m => m.ContactPersonPhone, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.ContactPersonPhone, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.NumberOfFamilyMembers, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.TextBoxFor(m => m.NumberOfFamilyMembers, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.NumberOfFamilyMembers, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.CityId, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.DropDownListFor(model => model.CityId, new SelectList(Model.Cities, "Id", "Name"), "-Izaberi grad-", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.CityId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(m => m.Note, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.TextAreaFor(m => m.Note, new { @cols = "10", @rows = "6", @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.FamilyMembers, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.TextAreaFor(m => m.FamilyMembers, new { @cols = "10", @rows = "6", @class = "form-control",
+                   placeholder ="Unesite članove porodice na sljedeći način: Ime prezime - godine" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.IsUrgent, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.CheckBoxFor(m => m.IsUrgent, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" class="btn btn-success" value="Snimi" />
+            </div>
+        </div>
+    </div>
+}
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+}

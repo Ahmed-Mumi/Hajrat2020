@@ -1,0 +1,127 @@
+﻿@using PagedList.Mvc;
+@model Hajrat2020.ViewModel.FamilyViewModel
+
+@{
+    ViewBag.Title = "Index";
+    var rowIndex = (int)ViewBag.StartRowIndex;
+}
+<style>
+    td, th {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    tbody tr {
+        cursor: pointer;
+    }
+</style>
+<div class="container" style="margin-top:30px;">
+    <a class="btn btn-primary" style="float:right;" href='@Url.Action("AddFamily","FamilyInNeed")'>Dodaj porodicu</a>
+    @if (Model.FamiliesInNeed != null && Model.FamiliesInNeed.Count() != 0)
+    {
+        <div class="table-responsive" style="margin-top:50px">
+            <table class="table table-hover" id="cssTable">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Ime i prezime</th>
+                        <th scope="col">Adresa</th>
+                        <th scope="col">Telefon</th>
+                        <th scope="col">Kontakt osoba</th>
+                        <th scope="col">Zadnja pomoć</th>
+                        <th scope="col">Uručene pomoći</th>
+                        <th scope="col">Broj članova porodice</th>
+                        <th scope="col"></th>
+                        <th scope="col">Hitno?</th>
+                        <th scope="col"></th>
+                        <th scope="col">(De)aktiviraj</th>
+                    </tr>
+                </thead>
+                <tbody class="tbody">
+                    @foreach (var family in Model.FamiliesInNeed)
+                    {
+                        <tr>
+                            <td scope="row" class="familyDetail"
+                            data-assigned-id=@family.Id data-toggle="modal" data-target="#familyModal">@(rowIndex++)</td>
+                            <td scope="row" class="familyDetail"
+                            data-assigned-id=@family.Id data-toggle="modal" data-target="#familyModal">@family.FullName</td>
+                            <td scope="row" class="familyDetail"
+                            data-assigned-id=@family.Id data-toggle="modal" data-target="#familyModal">@family.Address</td>
+                            <td scope="row" class="familyDetail"
+                            data-assigned-id=@family.Id data-toggle="modal" data-target="#familyModal">@family.Phone</td>
+                            <td scope="row" class="familyDetail"
+                            data-assigned-id=@family.Id data-toggle="modal" data-target="#familyModal">@family.ContactPersonName</td>
+                            <td scope="row" class="familyDetail"
+                            data-assigned-id=@family.Id data-toggle="modal" data-target="#familyModal">@(family.DateOfLastHelp == null ? "Pomoć još nije uručena" : family.DateOfLastHelp.Value.ToString(String.Format("dd/MMM/yyyy")))</td>
+                            <td scope="row" class="familyDetail"
+                            data-assigned-id=@family.Id data-toggle="modal" data-target="#familyModal">@family.NumberOfHelpsSoFar</td>
+                            <td scope="row" class="familyDetail"
+                            data-assigned-id=@family.Id data-toggle="modal" data-target="#familyModal">@family.NumberOfFamilyMembers</td>
+                            <td scope="row">
+                                <a class="btn btn-primary btn-sm" href='@Url.Action("AddFamilyToPrint","FamilyInNeed",new { id=family.Id })'><i class="fa fa-plus fa-lg"></i></a>
+                            </td>
+                            <td scope="row" class="familyDetail"
+                            data-assigned-id=@family.Id data-toggle="modal" data-target="#familyModal">
+                                @if (family.IsUrgent)
+                                {
+                                    <i style="color:darkred" class="fa fa-exclamation-triangle fa-lg" aria-hidden="true"></i>
+                                }
+                            </td>
+                            @if (family.ApplicationUserId == Model.LoggedInUser || Model.IsAdmin)
+                            {
+                                <td scope="row">
+                                    <a class="btn btn-primary btn-sm" href='@Url.Action("EditFamily","FamilyInNeed",new { id=family.Id })'><i class="fa fa-pencil fa-lg"></i></a>
+                                </td>
+                                <td scope="row">
+                                    @if (family.IsActive)
+                                    {
+                                        <a class="btn btn-danger btn-sm" href='@Url.Action("DeActivateFamily", "FamilyInNeed", new { id = family.Id })'><i class="fa fa-ban fa-lg"></i></a>
+                                    }
+                                    else
+                                    {
+
+                                        <a class="btn btn-primary btn-sm" href='@Url.Action("DeActivateFamily", "FamilyInNeed", new { id = family.Id })'><i class="fa fa-check-circle fa-lg"></i></a>
+                                    }
+                                </td>
+                            }
+                            else
+                            {
+                                <td scope="row">
+                                    <i style="color:grey" class="fa fa-ban fa-lg"></i>
+                                </td>
+                                <td scope="row">
+                                    <i style="color:grey" class="fa fa-ban fa-lg"></i>
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        @Html.PagedListPager(Model.FamiliesInNeed,page=>Url.Action("GetFamilies", new { page}),
+            new PagedListRenderOptions() { Display=PagedListDisplayMode.IfNeeded})
+    }
+    else
+    {
+        <h3>Trenutno nema unesenih porodica</h3>
+    }
+</div>
+
+<div class="modal fade" id="familyModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="partialFamily"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,67 @@
+﻿@model Hajrat2020.ViewModel.FamilyViewModel
+
+@{
+    ViewBag.Title = "GetFamily";
+}
+<h3 style="text-align:center">Informacije o porodici</h3>
+<table class="table">
+    <tbody>
+        <tr>
+            <th>@Html.DisplayNameFor(m => m.FullName)</th>
+            <td>@Html.DisplayFor(m => m.FullName)</td>
+        </tr>
+        <tr>
+            <th>@Html.DisplayNameFor(m => m.Address)</th>
+            <td>@Html.DisplayFor(m => m.Address), @Html.DisplayFor(m => m.CityName)</td>
+        </tr>
+        <tr>
+            <th>@Html.DisplayNameFor(m => m.Phone)</th>
+            <td>@Html.DisplayFor(m => m.Phone)</td>
+        </tr>
+        <tr>
+            <th>@Html.DisplayNameFor(m => m.AdminName)</th>
+            <td>@Html.DisplayFor(m => m.AdminName)</td>
+        </tr>
+        <tr>
+            <th>@Html.DisplayNameFor(m => m.ContactPersonName)</th>
+            <td>@Html.DisplayFor(m => m.ContactPersonName)</td>
+        </tr>
+        <tr>
+            <th>@Html.DisplayNameFor(m => m.ContactPersonPhone)</th>
+            <td>@Html.DisplayFor(m => m.ContactPersonPhone)</td>
+        </tr>
+        <tr>
+            <th>@Html.DisplayNameFor(m => m.DateOfInsert)</th>
+            <td>@Model.DateOfInsert.ToString("dd/MMM/yyyy")</td>
+        </tr>
+        <tr>
+            <th>@Html.DisplayNameFor(m => m.DateOfLastHelp)</th>
+            <td>
+                @(Model.DateOfLastHelp == null ? "Pomoć još nije uručena" : Model.DateOfLastHelp.Value.ToString("dd/MMM/yyyy"))
+            </td>
+        </tr>
+        @if (Model.Note != null)
+        {
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.Note)</th>
+                <td style="word-break:break-word;white-space:normal;">@Html.DisplayFor(m => m.Note)</td>
+            </tr>
+        }
+        @if (Model.FamilyMembers != null)
+        {
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.FamilyMembers)</th>
+                <td style="word-break:break-word;white-space:normal;">@Html.DisplayFor(m => m.FamilyMembers)</td>
+            </tr>
+        }
+        <tr>
+            <th>@Html.DisplayNameFor(m => m.NumberOfFamilyMembers)</th>
+            <td>@Html.DisplayFor(m => m.NumberOfFamilyMembers)</td>
+        </tr>
+        <tr>
+            <th>@Html.DisplayNameFor(m => m.NumberOfHelpsSoFar)</th>
+            <td>@Html.DisplayFor(m => m.NumberOfHelpsSoFar)</td>
+        </tr>
+    </tbody>
+</table>
+

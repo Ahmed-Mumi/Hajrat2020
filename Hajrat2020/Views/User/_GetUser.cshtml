@@ -1,0 +1,36 @@
+﻿@model Hajrat2020.ViewModel.UserViewModel
+
+@{
+    ViewBag.Title = "GetUser";
+}
+<div>
+    <h3 style="text-align:center;">Informacije o korisniku</h3>
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.FullName)</th>
+                <td>@Html.DisplayFor(m => m.FullName)</td>
+            </tr>
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.CityName)</th>
+                <td>@Html.DisplayFor(m => m.CityName)</td>
+            </tr>
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.DateOfAddingAdmin)</th>
+                <td>@Model.DateOfAddingAdmin.ToString("dd/MMM/yyyy")</td>
+            </tr>
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.Email)</th>
+                <td><span style="text-decoration:none;">@Model.Email</span></td>
+            </tr>
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.GenderName)</th>
+                <td>@Html.DisplayFor(m => m.GenderName)</td>
+            </tr>
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.Phone)</th>
+                <td>@Html.DisplayFor(m => m.Phone)</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

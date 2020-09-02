@@ -1,0 +1,162 @@
+﻿@model Hajrat2020.ViewModel.DonationViewModel
+@using Hajrat2020.Models;
+
+@{
+    ViewBag.Title = "GetDonation";
+}
+<style>
+    /* Style the Image Used to Trigger the Modal */
+    #donationImage {
+        border-radius: 5px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+        #donationImage:hover {
+            opacity: 0.7;
+        }
+
+    /* The Modal (background) */
+    .modal1 {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        padding-top: 100px; /* Location of the box */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+    }
+
+    /* Modal Content (Image) */
+    .modal1-content {
+        margin: auto;
+        display: block;
+        width: 80%;
+        max-width: 700px;
+    }
+
+    /* Caption of Modal Image (Image Text) - Same Width as the Image */
+    #caption2 {
+        margin: auto;
+        display: block;
+        width: 80%;
+        max-width: 700px;
+        text-align: center;
+        color: #ccc;
+        padding: 10px 0;
+        height: 150px;
+    }
+
+    /* Add Animation - Zoom in the Modal */
+    .moda1l-content, #caption2 {
+        animation-name: zoom;
+        animation-duration: 0.6s;
+    }
+
+    @@keyframes zoom {
+        from {
+            transform: scale(0)
+        }
+
+        to {
+            transform: scale(1)
+        }
+    }
+
+    /* The Close Button */
+    .close {
+        position: absolute;
+        top: 50px;
+        right: 35px;
+        color: #f1f1f1;
+        font-size: 40px;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+
+        .close:hover,
+        .close:focus {
+            color: #bbb;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+    /* 100% Image Width on Smaller Screens */
+    @@media only screen and (max-width: 700px) {
+        .modal1-content {
+            width: 100%;
+        }
+    }
+</style>
+@if (Model != null)
+{
+    <h3 style="text-align:center">Informacije o donaciji</h3>
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.FamilyInNeedFullname)</th>
+                <td>@Html.DisplayFor(m => m.FamilyInNeedFullname)</td>
+            </tr>
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.DateOfDonation)</th>
+                <td>@Model.DateOfDonation.ToString("dd/MMM/yyyy")</td>
+            </tr>
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.Address)</th>
+                <td>@Html.DisplayFor(m => m.Address) , @Html.DisplayFor(m=>m.CityName)</td>
+            </tr>
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.Donator)</th>
+                @if (Model.Donator == null)
+                {
+                    <td>Anoniman</td>
+                }
+                else
+                {
+                    <td>@Html.DisplayFor(m => m.Donator)</td>
+                }
+            </tr>
+            @if (Model.Note != null)
+            {
+                <tr>
+                    <th>@Html.DisplayNameFor(m => m.Note)</th>
+                    <td style="word-break:break-word;white-space:normal;">@Html.DisplayFor(m => m.Note)</td>
+                </tr>
+            }
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.TypeOfHelpName)</th>
+                <td>@Html.DisplayFor(m => m.TypeOfHelpName)</td>
+            </tr>
+            @if (Model.TypeOfHelpId == MagicNumbers.MoneyTypeDonations && Model.AmountOfMoney != 0 && Model.AmountOfMoney != null)
+            {
+                <tr>
+                    <th>@Html.DisplayNameFor(m => m.AmountOfMoney)</th>
+                    <td>@Html.DisplayFor(m => m.AmountOfMoney) @Html.DisplayFor(m => m.CurrencyName)</td>
+                </tr>
+            }
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.UserName)</th>
+                <td>@Html.DisplayFor(m => m.UserName)</td>
+            </tr>
+            @if (!Model.Image.Contains(MagicNumbers.Default))
+            {
+                <tr>
+                    <th>@Html.DisplayNameFor(m => m.Image)</th>
+                    <td>
+                        <img src="@Url.Content(Model.Image)" style="margin:10px" height="200" width="200" id="donationImage" />
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<div id="myModal2" class="modal1">
+    <span class="close">&times;</span>
+    <img class="modal1-content" id="img02">
+</div>
+
